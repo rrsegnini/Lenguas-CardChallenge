@@ -21,9 +21,13 @@ fun card_value(c)=
 	    | (s, Ace) => 11
 	    | (s, r) => 10
 
-(*fun remove_card(cs, c, e)=
+fun remove_card(cs, c, e)=
     case (cs, c, e) of
-	(x::tl) => *)
+	([],c, e) => raise e 
+      | (x::tl, c, e) => if x = c then tl else x::remove_card(tl, c, e)
+							
+								
+				      
 
 fun all_same_color(cs)=
     case cs of
