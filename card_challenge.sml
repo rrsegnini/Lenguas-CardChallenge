@@ -61,17 +61,17 @@ fun score(held_cards, goal)=
 											
 fun officiate(card_list,move_list,goal:int)=
     let val held_cards = []
-	val score = 0
+	val actual_score = 0
 	fun main(card_list,move_list,held_cards)=
 	    case move_list of
 		[] => score(held_cards,goal)
-	       |(move::moves_tail)  =>  case move of
-				      Draw => case card_list of
+	       |(move::moves_tail)  => ( case move of
+				      Draw =>(case card_list of
 						  [] => raise IllegalMove
-						| (card::cards_tail) => if sum_cards(held_cards::card)>goal
-									then score(held_cards::card,goal)
-									else main(cards_tail,moves_tail,held_cards::card)						 
-			             |Discard c  => main(card_list,moves_tail,remove(held_cards,c,IllegalMove))
+						| (card::cards_tail) => if sum_cards(card::held_cards)>goal
+									then score(card::held_cards,goal)
+									else main(cards_tail,moves_tail,card::held_cards))						 
+			             |Discard c  => main(card_list,moves_tail,remove_card(held_cards,c,IllegalMove)))
     in
 	main(card_list,move_list,held_cards)
 
