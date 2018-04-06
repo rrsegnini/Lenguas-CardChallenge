@@ -24,7 +24,8 @@ fun card_value(c)=
 fun remove_card(cs, c, e)=
     case (cs, c, e) of
 	([],c, e) => raise e 
-      | (x::tl, c, e) => if x = c then tl else x::remove_card(tl, c, e)
+      (* | (x::tl, c, e) => if x = c then tl else x::remove_card(tl, c, e)*)		   
+      | (x::tl, c, e) => if (card_color(x),card_value(x)) = (card_color(c),card_value(c)) then tl else x::remove_card(tl, c, e)
 							
 								
 				      
@@ -67,7 +68,7 @@ fun officiate(card_list,move_list,goal:int)=
 		[] => score(held_cards,goal)
 	       |(move::moves_tail)  => ( case move of
 				      Draw =>(case card_list of
-						  [] => raise IllegalMove
+						  [] =>  score(held_cards,goal)
 						| (card::cards_tail) => if sum_cards(card::held_cards)>goal
 									then score(card::held_cards,goal)
 									else main(cards_tail,moves_tail,card::held_cards))						 
@@ -76,5 +77,7 @@ fun officiate(card_list,move_list,goal:int)=
 	main(card_list,move_list,held_cards)
 
     end
+
+			      
 	
 	     
