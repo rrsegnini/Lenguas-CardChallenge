@@ -131,4 +131,47 @@ fun officiate_challenge(card_list,move_list,goal:int)=
 	main(card_list,move_list,held_cards)
 
     end	
-	     
+
+
+
+fun check_discard_draw(card_list,goal,card)=
+    let val saved_cards = []
+	fun cdd_aux(card_list,goal,card,saved_cards)=
+	    case card_list of
+		[] => false
+	      | (discard_card::card_tail) => if score(discard_card::card_tail,goal)=0
+				      then true
+				      else cdd_aux(card_tail,goal,card,saved_cards)
+    in
+	cdd_aux(card_list,goal,card,saved_cards)
+    end
+
+	
+				     
+	
+fun careful_player(card_list,goal:int)=
+    let val held_cards = []
+	val move_list = []
+	val actual_score = 0
+	fun main(card_list,move_list,held_cards)=
+	    case card_list of
+		[] => move_list   
+	      | (card::[]) => if (goal-sum_cards(held_cards))>10
+			      then main([],Draw::move_list,card::held_cards)
+			      else main([],move_list,held_cards)
+	      | (card::card2::card_tail) => if score(held_cards, goal)=0
+					    then move_list
+					    else
+						if (goal-sum_cards(held_cards))>10
+						then main(card2::card_tail,Draw::move_list,card::held_cards)
+						else
+						    if check_discard_draw(held_cards,goal,card)
+						    then main(card_tail,Discard card::Draw::move_list,card2::held_cards)
+						    else main(card2::card_tail,Discard card::move_list,held_cards)
+    in
+	main(card_list,move_list,held_cards)
+    end
+	
+					    
+
+					    
