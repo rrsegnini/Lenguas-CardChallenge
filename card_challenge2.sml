@@ -138,10 +138,10 @@ fun check_discard_draw(card_list,goal,card)=
     let val saved_cards = []
 	fun cdd_aux(card_list,goal,card,saved_cards)=
 	    case card_list of
-		[] => false
-	      | (discard_card::card_tail) => if score(discard_card::card_tail,goal)=0
-				      then true
-				      else cdd_aux(card_tail,goal,card,saved_cards)
+		[] => (Hearts,Num 0)
+	      | (discard_card::card_tail) => if score(card::discard_card::card_tail,goal)=0
+				      then card
+				      else cdd_aux(card_tail,goal,card,discard_card::saved_cards)
     in
 	cdd_aux(card_list,goal,card,saved_cards)
     end
@@ -165,9 +165,9 @@ fun careful_player(card_list,goal:int)=
 						if (goal-sum_cards(held_cards))>10
 						then main(card2::card_tail,Draw::move_list,card::held_cards)
 						else
-						    if check_discard_draw(held_cards,goal,card)
-						    then main(card_tail,Discard card::Draw::move_list,card2::held_cards)
-						    else main(card2::card_tail,Discard card::move_list,held_cards)
+						    if card_value(check_discard_draw(held_cards,goal,card2))<>0
+						    then main(card_tail,Draw::Discard (check_discard_draw(held_cards,goal,card))::move_list,card2::held_cards)
+						    else main(card2::card_tail,Draw::move_list,card::held_cards)
     in
 	main(card_list,move_list,held_cards)
     end
